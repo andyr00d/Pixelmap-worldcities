@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>map created with amCharts | amCharts</title>
+		<meta name="description" content="map created using amCharts pixel map generator" />
+
+		<!--
+			This map was created using Pixel Map Generator by amCharts and is licensed under the Creative Commons Attribution 4.0 International License.
+			You may use this map the way you see fit as long as proper attribution to the name of amCharts is given in the form of link to https://pixelmap.amcharts.com/
+			To view a copy of this license, visit http://creativecommons.org/licenses/by/4.0/
+
+			If you would like to use this map without any attribution, you can acquire a commercial license for the JavaScript Maps - a tool that was used to produce this map.
+			To do so, visit amCharts Online Store: https://www.amcharts.com/online-store/
+		-->
+
+        <!-- amCharts javascript sources -->
+		<script type="text/javascript" src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+		<script src="https://d3js.org/d3.v3.min.js"></script>
+		<script type="text/javascript" src="https://www.amcharts.com/lib/3/ammap.js"></script>
+        <script type="text/javascript" src="https://www.amcharts.com/lib/3/maps/js/worldHigh.js"></script>
+		<link href='https://fonts.googleapis.com/css?family=BenchNine' rel='stylesheet'>
+
+		<!-- amCharts javascript code -->
+		<script type="text/javascript">
+			AmCharts.makeChart("map",{
+					"type": "map",
+					"pathToImages": "http://www.amcharts.com/lib/3/images/",
+					"addClassNames": true,
+					"fontSize": 15,
+					"color": "#FFFFFF",
+					"projection": "mercator",
+					"backgroundAlpha": 1,
+					"backgroundColor": "rgba(80,80,80,1)",
+					"dataProvider": {
+						"map": "worldHigh",
+						"getAreasFromMap": true,
+						"images": [
+							{
+								"top": 40,
+								"left": 60,
+								"width": 80,
+								"height": 40,
+								"pixelMapperLogo": true,
+								"imageURL": "http://pixelmap.amcharts.com/static/img/logo.svg",
+								"url": "http://www.amcharts.com"
+							},
+							{
+								"groupId": "GL",
+								"selectable": false,
+								"title": "Greenland",
+								"longitude": -37.4398,
+								"latitude": 83.5434,
+								"type": "hexagon",
+								"color": "rgba(129,129,129,1)",
+								"width": 18,
+								"height": 18,
+								"scale": 1,
+                                "fixedSize": false,
+                                "id": "testId"
+								//"label": "test"
+							},
+							{"label":"Tokyo","latitude":83.5434,"longitude":-37.4398},
+{"label":"New York","latitude":83.5434,"longitude":-37.4398}
+						]
+					},
+					"balloon": {
+						"selectable": false,
+						"enabled": false
+					},
+					"areasSettings": {
+						"color": "rgba(129,129,129,1)",
+						"outlineColor": "rgba(80,80,80,1)",
+						"rollOverOutlineColor": "rgba(80,80,80,1)",
+						"rollOverBrightness": 20,
+						"selectedBrightness": 20,
+						"selectable": false,
+						"unlistedAreasAlpha": 0,
+						"unlistedAreasOutlineAlpha": 0,
+						"alpha": 0,
+						"outlineAlpha": 0
+					},
+					"imagesSettings": {
+						"alpha": 1,
+						"color": "rgba(129,129,129,1)",
+						"outlineAlpha": 0,
+						"rollOverOutlineAlpha": 0,
+						"outlineColor": "rgba(80,80,80,1)",
+						"rollOverBrightness": 20,
+						"selectedBrightness": 20,
+						"selectable": false
+					},
+					"linesSettings": {
+						"color": "rgba(129,129,129,1)",
+						"selectable": false,
+						"rollOverBrightness": 20,
+						"selectedBrightness": 20
+					},
+					"zoomControl": {
+						"zoomControlEnabled": true,
+						"homeButtonEnabled": false,
+						"panControlEnabled": false,
+						"right": 38,
+						"bottom": 30,
+						"minZoomLevel": 0.25,
+						"gridHeight": 100,
+						"gridAlpha": 0.1,
+						"gridBackgroundAlpha": 0,
+						"gridColor": "#FFFFFF",
+						"draggerAlpha": 1,
+						"buttonCornerRadius": 2
+					}
+				});
+
+				$(document).ready(function() {
+				// Handler for .ready() called.
+				console.log('DOM has been loaded!');
+
+				var el1 = document.querySelectorAll('text');
+
+				var hexes = document.getElementsByTagName("path"); //document.getElementsByClassName("amcharts-map-image");
+
+				for (var j = 0; j < el1.length; j++) {
+					for (var i = 0; i < hexes.length; i++) {
+						//check if the path also has a class "amcharts-map-image"
+						if (hexes.item(i).classList.contains("amcharts-map-image")) {
+							if (intersectRect(el1.item(j), hexes.item(i))) {
+								console.log('collision detected!' + el1 + " & " + hexes.item(i));
+								//$(hexes.item(i)).attr('fill',"rgba(226, 106, 106, 1)");
+								//$(hexes.item(i).css({userSelect: 'none'}));
+								addText(hexes.item(i), el1.item(j).textContent);
+								el1.item(j).remove();
+							}
+						}
+					}
+				}
+				
+				function intersectRect(r1, r2) {
+					var r1 = r1.getBoundingClientRect();    //BOUNDING BOX OF THE FIRST OBJECT
+					var r2 = r2.getBoundingClientRect();    //BOUNDING BOX OF THE SECOND OBJECT
+
+					//CHECK IF THE TWO BOUNDING BOXES OVERLAP
+				return !(r2.left > r1.right || 
+						r2.right < r1.left || 
+						r2.top > r1.bottom ||
+						r2.bottom < r1.top);
+				}
+
+				});
+
+				function addText(p, text)
+				{
+					var t = document.createElementNS("http://www.w3.org/2000/svg", "text");
+					var b = p.getBBox();
+					var width=18, height=18;
+					var widthTransform = width / b.width;
+					var heightTransform = height / b.height;
+					var value = widthTransform < heightTransform ? widthTransform : heightTransform;
+					t.setAttribute("transform", "matrix("+value+", 0, 0, 0.5, 0.5,1.5)");
+
+					//t.setAttribute("transform", "translate(" + (b.x + b.width/2) + " " + (b.y + b.height/2) + ")");
+					t.textContent = text;
+					t.setAttribute("font-family", "BenchNine");
+					t.setAttribute("font-size", "16");
+					t.setAttribute("text-anchor", "middle");
+					t.setAttribute("maxWidth", "18px");
+					t.setAttribute("maxHeight", "18px");
+					t.setAttribute("textLength", "18px");
+					t.setAttribute("lengthAdjust", "spacingAndGlyphs");
+					p.parentNode.insertBefore(t, p.nextSibling);
+
+					//var width=5, height=5;
+
+					//var textNode = document.getElementById("t1");
+					// var bb = t.getBBox();
+					// var widthTransform = width / bb.width;
+					// var heightTransform = height / bb.height;
+					// var value = widthTransform < heightTransform ? widthTransform : heightTransform;
+					// t.setAttribute("transform", "matrix("+value+", 0, 0, "+value+", 0,0)");
+
+				}
+
+		</script>
+	</head>
+	<body style="margin: 0;background-color: rgba(80,80,80,1);">
+		<div id="map" style="width: 100%; height: 1057px;"></div>
+		
+	</body>
+</html>
